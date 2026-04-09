@@ -1,71 +1,148 @@
 # Text2Audio AI
 
-A portfolio-ready AI project that converts user-provided text into audio, either by reading the **full text** or by generating a **summary** and narrating it.
+<p align="center">
+  <strong>An AI-powered monorepo application that turns text into audio, either as full narration or as a summarized spoken version.</strong>
+</p>
 
-This project is designed to showcase a practical AI architecture using:
+<p align="center">
+  <img src="https://img.shields.io/badge/Angular-Frontend-dd0031?logo=angular&logoColor=white" alt="Angular">
+  <img src="https://img.shields.io/badge/Express-Backend-000000?logo=express&logoColor=white" alt="Express">
+  <img src="https://img.shields.io/badge/TypeScript-Language-3178c6?logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Nx-Monorepo-143055?logo=nx&logoColor=white" alt="Nx">
+  <img src="https://img.shields.io/badge/pnpm-Workspace-f69220?logo=pnpm&logoColor=white" alt="pnpm">
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-4169e1?logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Redis-Queue%20Backend-dc382d?logo=redis&logoColor=white" alt="Redis">
+  <img src="https://img.shields.io/badge/BullMQ-Jobs-eab308" alt="BullMQ">
+  <img src="https://img.shields.io/badge/Google%20Gemini-Summarization-4285f4?logo=google&logoColor=white" alt="Gemini">
+  <img src="https://img.shields.io/badge/Google%20Cloud-TTS-34a853?logo=googlecloud&logoColor=white" alt="Google Cloud TTS">
+</p>
 
-- **Angular** for the frontend
-- **Node.js + Express + TypeScript** for the backend
-- **Gemini 2.5 Flash-Lite** for summarization
-- **Google Cloud Text-to-Speech** for audio generation
-- **BullMQ + Redis** for background jobs
-- **PostgreSQL** for persistence
-- **S3 / Cloudflare R2** for audio storage
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Demo Idea](#demo-idea)
+- [Features](#features)
+- [Why This Project Is Strong for a Portfolio](#why-this-project-is-strong-for-a-portfolio)
+- [Monorepo Strategy](#monorepo-strategy)
+- [Architecture](#architecture)
+- [System Flow](#system-flow)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [API Design](#api-design)
+- [Database Design](#database-design)
+- [Queue Design](#queue-design)
+- [AI Pipeline](#ai-pipeline)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Available Scripts](#available-scripts)
+- [Roadmap](#roadmap)
+- [Future Enhancements](#future-enhancements)
+- [Final Recommendation](#final-recommendation)
 
 ---
 
 ## Overview
 
-The application allows a user to paste text into a web interface and choose one of two modes:
+**Text2Audio AI** is a portfolio-ready AI application where a user pastes text into a web interface and chooses one of two output modes:
 
-- **Full Text to Audio**: converts the full text into speech
-- **Summary to Audio**: generates a summary first, then converts that summary into speech
+- **Full Text to Audio** — convert the full text into spoken audio
+- **Summary to Audio** — generate a summary first, then narrate it
 
-The system processes the request asynchronously, stores the generated audio, and returns a playable/downloadable result.
+The goal is to showcase a realistic AI product architecture using:
 
----
-
-## Recommended Stack
-
-### Frontend
-- Angular
-- Reactive Forms
-- Audio player UI
-- Job status polling or WebSocket updates
-
-### Backend
-- Node.js
-- Express
-- TypeScript
-- Zod or Joi for request validation
-- BullMQ for job queues
-- Redis for queue management
-- PostgreSQL for metadata and history
-
-### AI Services
-- **Summarization**: Gemini 2.5 Flash-Lite
-- **Text-to-Speech**: Google Cloud Text-to-Speech
-
-### Storage
-- Amazon S3 or Cloudflare R2 for generated audio files
+- a modern frontend
+- a modular Node.js backend
+- an LLM for summarization
+- a TTS engine for speech generation
+- asynchronous job processing
+- persistent storage for metadata and audio assets
 
 ---
 
-## Why This Architecture
+## Demo Idea
 
-This architecture is a good fit for a portfolio project because it demonstrates:
+A user can:
 
-- clean separation of concerns
-- real-world AI orchestration
-- asynchronous processing with queues
-- persistence and asset storage
-- scalability for long-running audio generation jobs
+1. paste a long article, note, transcript, or lesson into the interface
+2. choose whether they want:
+   - the full text narrated, or
+   - a short, medium, or long summary narrated
+3. select a language and voice
+4. generate audio
+5. play or download the resulting file
+6. review previous generations in a history page
 
-It also keeps costs low while still delivering a professional result.
+This makes the project useful, easy to explain in interviews, and visually attractive for a portfolio.
 
 ---
 
-## High-Level Architecture
+## Features
+
+### Core Features
+- paste text manually into the app
+- choose between **full** or **summary** mode
+- choose summary length
+- choose language and voice
+- generate audio asynchronously
+- preview and play generated audio
+- store generation history
+- track job status (`queued`, `processing`, `completed`, `failed`)
+
+### Technical Features
+- monorepo architecture
+- shared TypeScript packages between frontend and backend
+- queue-based background processing with BullMQ
+- long-text chunking strategy
+- storage for generated audio files
+- cost and duration estimation per job
+- scalable service boundaries for summarization and TTS
+
+---
+
+## Why This Project Is Strong for a Portfolio
+
+This project demonstrates more than “just calling an API.” It shows that you can design and implement:
+
+- a complete frontend + backend architecture
+- AI orchestration using multiple providers/services
+- asynchronous job processing
+- cloud-friendly file storage
+- shared contracts across applications in a monorepo
+- realistic engineering tradeoffs around cost, performance, and scalability
+
+You can position it as a product-oriented AI project, not just a demo.
+
+---
+
+## Monorepo Strategy
+
+This project should be built as a **monorepo**.
+
+### Recommended Monorepo Tooling
+- **Nx** for workspace orchestration, task running, dependency graph, code generation, and build optimization
+- **pnpm workspaces** for package management and local package linking
+
+### Why a Monorepo Fits This Project
+A monorepo is a strong fit because this application has:
+
+- a frontend app
+- a backend app
+- shared DTOs and API contracts
+- shared utility functions
+- potential shared UI libraries and tooling
+
+### Benefits
+- shared TypeScript types between frontend and backend
+- one place for linting, formatting, and testing rules
+- simpler local development
+- clearer dependency management
+- better CI performance as the project grows
+
+---
+
+## Architecture
 
 ```text
 [ Angular Frontend ]
@@ -75,7 +152,7 @@ It also keeps costs low while still delivering a professional result.
         |
         +--> [ Summarization Service ] ---> Gemini 2.5 Flash-Lite
         |
-        +--> [ TTS Service ] ------------> Google Cloud TTS
+        +--> [ TTS Service ] ------------> Google Cloud Text-to-Speech
         |
         +--> [ Job Queue ] --------------> BullMQ + Redis
         |
@@ -86,37 +163,86 @@ It also keeps costs low while still delivering a professional result.
 
 ---
 
-## Main Use Cases
+## System Flow
 
-### 1. Full Text to Audio
-1. The user pastes text into the interface.
-2. The frontend sends the text and selected options to the backend.
-3. The backend creates a job.
-4. A worker processes the job.
-5. If needed, the text is split into chunks.
-6. Each chunk is sent to the TTS provider.
-7. Audio segments are merged.
-8. The final audio file is stored.
-9. The frontend receives the result URL and metadata.
+### Full Text to Audio
+1. The user pastes text into the UI.
+2. The frontend sends a job request to the backend.
+3. The backend stores job metadata and queues the request.
+4. A worker splits the text into chunks if necessary.
+5. Each chunk is sent to the TTS provider.
+6. Audio segments are merged.
+7. The final file is uploaded to storage.
+8. The frontend fetches the completed result.
 
-### 2. Summary to Audio
-1. The user pastes text into the interface.
-2. The frontend sends the text with `summary` mode.
-3. The backend creates a job.
-4. A worker sends the text to the summarization provider.
-5. The summary is optionally rewritten for better narration.
-6. The final text is sent to the TTS provider.
-7. The audio file is generated and stored.
-8. The frontend receives the summary, audio URL, and job metadata.
+### Summary to Audio
+1. The user submits text in `summary` mode.
+2. The backend stores the job and queues it.
+3. A worker sends the text to the summarization model.
+4. The summary is optionally rewritten for better narration.
+5. The final text is sent to the TTS service.
+6. The generated audio is uploaded to storage.
+7. The frontend displays the summary and audio result.
 
 ---
 
-## Backend Architecture with Express
+## Tech Stack
 
-A simple and scalable Express structure could look like this:
+### Monorepo
+- **Nx**
+- **pnpm workspaces**
+
+### Frontend
+- **Angular**
+- **TypeScript**
+- **Reactive Forms**
+- audio player UI
+- polling or WebSockets for job status updates
+
+### Backend
+- **Node.js**
+- **Express**
+- **TypeScript**
+- **Zod** or **Joi** for validation
+
+### Jobs and Infrastructure
+- **BullMQ**
+- **Redis**
+- **PostgreSQL**
+- **S3** or **Cloudflare R2**
+
+### AI Services
+- **Gemini 2.5 Flash-Lite** for summarization
+- **Google Cloud Text-to-Speech** for voice generation
+
+---
+
+## Project Structure
 
 ```text
-src/
+apps/
+  web/                     # Angular frontend
+  api/                     # Express backend
+
+packages/
+  shared-types/            # DTOs, interfaces, API contracts
+  shared-utils/            # Helpers, text processing, estimators
+  eslint-config/           # Shared lint config (optional)
+  tsconfig/                # Shared TS config (optional)
+  ui/                      # Shared UI library (optional, future)
+
+tools/
+  scripts/                 # Local scripts, generators, setup helpers
+
+infra/
+  docker/                  # Docker-related files (optional)
+  terraform/               # IaC (future)
+```
+
+### Express App Structure
+
+```text
+apps/api/src/
   app.ts
   server.ts
 
@@ -138,12 +264,12 @@ src/
     health.controller.ts
 
   services/
+    jobs.service.ts
     summarization.service.ts
     tts.service.ts
     audio.service.ts
     storage.service.ts
     history.service.ts
-    jobs.service.ts
 
   workers/
     summary.worker.ts
@@ -166,38 +292,16 @@ src/
     estimate-duration.ts
     estimate-cost.ts
     logger.ts
-
-  db/
-    migrations/
-    repositories/
 ```
-
-### Layer Responsibilities
-
-#### Routes
-Define API endpoints and connect them to controllers.
-
-#### Controllers
-Handle HTTP requests and responses.
-
-#### Services
-Contain business logic, including summarization, text-to-speech, audio merging, storage, and persistence.
-
-#### Workers
-Process long-running or asynchronous jobs from BullMQ.
-
-#### Validators
-Validate incoming request payloads.
-
-#### Utilities
-Shared helper functions such as text chunking and duration estimation.
 
 ---
 
-## Suggested API Endpoints
+## API Design
 
-### Create a Job
-`POST /api/jobs`
+### `POST /api/jobs`
+Creates a new generation job.
+
+**Request**
 
 ```json
 {
@@ -210,8 +314,17 @@ Shared helper functions such as text chunking and duration estimation.
 }
 ```
 
-### Get Job Status
-`GET /api/jobs/:id`
+**Response**
+
+```json
+{
+  "id": "job_123",
+  "status": "queued"
+}
+```
+
+### `GET /api/jobs/:id`
+Returns the current job status.
 
 ```json
 {
@@ -220,8 +333,8 @@ Shared helper functions such as text chunking and duration estimation.
 }
 ```
 
-### Get Job Result
-`GET /api/jobs/:id/result`
+### `GET /api/jobs/:id/result`
+Returns the completed result.
 
 ```json
 {
@@ -239,23 +352,23 @@ Shared helper functions such as text chunking and duration estimation.
 }
 ```
 
-### List Available Voices
-`GET /api/voices?language=es`
+### `GET /api/voices?language=es`
+Returns a list of available voices.
 
-### Get History
-`GET /api/history`
+### `GET /api/history`
+Returns previous generations.
 
 ---
 
 ## Database Design
 
 ### `jobs`
-Stores the lifecycle of each generation request.
+Tracks job lifecycle and request settings.
 
-Fields:
+**Fields**
 - `id`
-- `status` (`queued`, `processing`, `completed`, `failed`)
-- `mode` (`full`, `summary`)
+- `status`
+- `mode`
 - `language`
 - `voice`
 - `output_format`
@@ -264,9 +377,9 @@ Fields:
 - `updated_at`
 
 ### `job_texts`
-Stores the original and processed text.
+Stores input and processed text.
 
-Fields:
+**Fields**
 - `id`
 - `job_id`
 - `original_text`
@@ -276,7 +389,7 @@ Fields:
 ### `job_assets`
 Stores generated file references.
 
-Fields:
+**Fields**
 - `id`
 - `job_id`
 - `audio_url`
@@ -284,9 +397,9 @@ Fields:
 - `storage_key`
 
 ### `job_metrics`
-Stores performance and cost data.
+Stores performance and cost metadata.
 
-Fields:
+**Fields**
 - `id`
 - `job_id`
 - `llm_provider`
@@ -303,7 +416,7 @@ Fields:
 
 Use **BullMQ** to process jobs asynchronously.
 
-### Suggested Queues
+### Queues
 - `summary-jobs`
 - `tts-jobs`
 - `merge-audio-jobs`
@@ -314,18 +427,16 @@ Use **BullMQ** to process jobs asynchronously.
 - `completed`
 - `failed`
 
-### Why Use Queues
-Queues make the system more robust and portfolio-ready:
-
-- avoid blocking HTTP requests
-- handle long-running audio generation
-- retry failed jobs
-- process large texts in chunks
-- separate API concerns from heavy background work
+### Why Queues Matter
+- avoid blocking API requests
+- handle long-running jobs cleanly
+- retry failed work
+- scale workers independently
+- process long inputs chunk by chunk
 
 ---
 
-## Processing Strategy
+## AI Pipeline
 
 ### Summarization Strategy
 For short text:
@@ -334,24 +445,21 @@ For short text:
 For long text:
 - split into chunks
 - summarize each chunk
-- combine the chunk summaries into a final summary
+- combine into a final summary
 
-This prevents context window issues and improves consistency.
+### Narration Rewrite Strategy
+Before sending text to TTS, optionally rewrite it so it sounds better when read aloud.
 
 ### TTS Strategy
 For short text:
-- send the text directly to the TTS provider
+- send text directly to TTS
 
 For long text:
 - split text into semantic chunks
-- generate audio per chunk
-- merge all audio segments into a single file
+- generate audio for each chunk
+- merge the final output
 
----
-
-## Prompt Design
-
-### Summarization Prompt
+### Example Summarization Prompt
 ```text
 Summarize the following text in clear, natural English or Spanish.
 Keep the main ideas, remove redundancy, and make it easy to listen to.
@@ -360,7 +468,7 @@ Text:
 {{TEXT}}
 ```
 
-### Narration-Friendly Rewrite Prompt
+### Example Narration Prompt
 ```text
 Rewrite the following text so it sounds natural when read aloud.
 Keep the meaning unchanged, but improve clarity, rhythm, and flow.
@@ -369,126 +477,145 @@ Text:
 {{TEXT}}
 ```
 
-This extra narration step can noticeably improve the listening experience.
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 20+
+- pnpm 9+
+- Redis
+- PostgreSQL
+- a Google AI Studio or Gemini API key
+- a Google Cloud project with Text-to-Speech enabled
+- S3 or Cloudflare R2 bucket for audio storage
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/text2audio-ai.git
+cd text2audio-ai
+```
+
+### 2. Install Dependencies
+```bash
+pnpm install
+```
+
+### 3. Create Environment Files
+Create your environment files based on `.env.example`.
+
+Example:
+
+```bash
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
+```
+
+### 4. Start Local Services
+Make sure PostgreSQL and Redis are running.
+
+### 5. Run the Applications
+```bash
+pnpm nx serve api
+pnpm nx serve web
+```
+
+Or run both with a convenience script if you add one:
+
+```bash
+pnpm dev
+```
 
 ---
 
-## Recommended AI Providers
+## Environment Variables
 
-### Option A — Best Overall Choice
-- **Summarization**: Gemini 2.5 Flash-Lite
-- **TTS**: Google Cloud Text-to-Speech
+Example backend variables:
 
-This is the best balance of:
-- low cost
-- strong Node.js support
-- good voice quality
-- easy integration
+```env
+PORT=3000
+NODE_ENV=development
 
-### Option B — Single-Provider Demo
-- **Summarization**: Gemini 2.5 Flash-Lite
-- **TTS**: Gemini TTS
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/text2audio
+REDIS_URL=redis://localhost:6379
 
-This is useful if you want to demonstrate an all-in-one Gemini workflow, especially for portfolio purposes.
+GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_APPLICATION_CREDENTIALS=./google-credentials.json
+GOOGLE_CLOUD_PROJECT=your_project_id
 
-### Option C — Cheap and Fast Alternative
-- **Summarization**: Groq-compatible LLM
-- **TTS**: Google Cloud Text-to-Speech
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=text2audio-audio
+S3_PUBLIC_BASE_URL=https://your-bucket-url
+```
 
-This can be attractive if you want very fast summarization requests at low cost.
+Example frontend variables if needed:
 
----
-
-## MVP Scope
-
-### Version 1
-- paste text
-- choose full text or summary mode
-- choose language and voice
-- generate audio
-- play audio in the browser
-- store generation history
-
-### Version 2
-- short / medium / long summary levels
-- automatic language detection
-- progress updates in real time
-- chunk-based processing for long text
-- downloadable audio
-- cost estimation per job
-
-### Version 3
-- SSML support for better pauses and pronunciation
-- synchronized text highlighting during playback
-- file upload support (`.txt`, `.pdf`, `.docx`)
-- analytics dashboard for jobs and usage
+```env
+API_BASE_URL=http://localhost:3000/api
+```
 
 ---
 
-## Key Design Decisions
+## Available Scripts
 
-### Express Instead of NestJS
-Express keeps the backend lighter and easier to explain for a portfolio project, while still allowing clean separation into routes, controllers, services, workers, and validators.
+These are examples you can define in the root `package.json`.
 
-### Store the Final Narrated Text
-Do not store only the original text. Also store the final processed text that was actually sent to TTS.
-
-Benefits:
-- easier debugging
-- easier regeneration without re-summarizing
-- better auditability of the pipeline
-
-### Store Audio Externally
-Do not store audio binaries inside PostgreSQL.
-Store files in S3 or R2, and persist only:
-- file URL
-- storage key
-- duration
-- size
+```json
+{
+  "scripts": {
+    "dev": "nx run-many --target=serve --projects=api,web --parallel",
+    "build": "nx run-many --target=build --all",
+    "test": "nx run-many --target=test --all",
+    "lint": "nx run-many --target=lint --all",
+    "format": "prettier --write .",
+    "api:serve": "nx serve api",
+    "web:serve": "nx serve web"
+  }
+}
+```
 
 ---
 
-## Portfolio Value
+## Roadmap
 
-This project is strong for a portfolio because it shows:
+### MVP
+- [x] project architecture defined
+- [ ] Angular text input screen
+- [ ] Express job creation endpoint
+- [ ] BullMQ + Redis integration
+- [ ] Gemini summarization integration
+- [ ] Google Cloud TTS integration
+- [ ] audio storage integration
+- [ ] job history screen
 
-- AI integration with LLM + TTS
-- backend architecture with Express
-- asynchronous processing with queues
-- text chunking strategies
-- storage and persistence design
-- product thinking and user experience
+### V2
+- [ ] short / medium / long summaries
+- [ ] progress tracking in real time
+- [ ] downloadable audio
+- [ ] cost estimation per job
+- [ ] voice preview selector
 
-You can describe it like this:
-
-> Text2Audio AI is a web application that transforms user-provided text into audio, either by reading the full text or by generating and narrating a summary. The project uses Angular on the frontend and Node.js with Express on the backend, integrating an LLM for summarization and a TTS engine for voice synthesis. It includes background job processing, audio storage, generation history, and a scalable modular architecture.
-
----
-
-## Suggested Next Steps
-
-1. Build the Express API skeleton
-2. Create the `POST /jobs` endpoint
-3. Add BullMQ and Redis
-4. Integrate Gemini summarization
-5. Integrate Google Cloud TTS
-6. Save job metadata in PostgreSQL
-7. Store audio files in cloud storage
-8. Connect the Angular frontend
-9. Add playback, history, and progress tracking
+### V3
+- [ ] SSML support
+- [ ] text highlighting during playback
+- [ ] PDF / DOCX / TXT upload
+- [ ] authentication and user-specific history
+- [ ] analytics dashboard
 
 ---
 
 ## Future Enhancements
 
-- user authentication
-- per-user history
-- rate limiting
-- webhook completion notifications
-- real-time updates via WebSockets
+- WebSocket-based live job updates
+- webhook notifications for completed jobs
 - multiple TTS provider support
-- voice previews
-- multilingual prompt tuning
+- multilingual optimization prompts
+- speaker style presets
+- admin dashboard for usage analytics
+- rate limiting and quotas
+- user accounts and billing logic
 
 ---
 
@@ -496,13 +623,32 @@ You can describe it like this:
 
 For this project, the most practical stack is:
 
-- **Frontend**: Angular
-- **Backend**: Node.js + Express + TypeScript
-- **Summarization**: Gemini 2.5 Flash-Lite
-- **Text-to-Speech**: Google Cloud Text-to-Speech
-- **Queue**: BullMQ + Redis
-- **Database**: PostgreSQL
-- **Storage**: S3 or Cloudflare R2
+- **Monorepo:** Nx + pnpm workspaces
+- **Frontend:** Angular
+- **Backend:** Node.js + Express + TypeScript
+- **Summarization:** Gemini 2.5 Flash-Lite
+- **Text-to-Speech:** Google Cloud Text-to-Speech
+- **Queue:** BullMQ + Redis
+- **Database:** PostgreSQL
+- **Storage:** S3 or Cloudflare R2
 
-This stack is affordable, realistic, and strong enough to make the project stand out in a portfolio.
+This stack is affordable, scalable, and strong enough to stand out in a portfolio.
 
+---
+
+## Portfolio Description
+
+You can describe the project like this:
+
+> Text2Audio AI is a monorepo-based web application that transforms user-provided text into audio, either by reading the full text or by generating and narrating a summary. The project uses Angular on the frontend and Node.js with Express on the backend, integrating an LLM for summarization and a TTS engine for speech synthesis. It includes asynchronous job processing, cloud storage for generated audio, shared contracts across apps, and a scalable architecture designed for real-world growth.
+
+---
+
+## Notes
+
+- Replace repository URLs, cloud credentials paths, and storage values with your real project values.
+- If you want, you can later split this README into:
+  - a root monorepo README
+  - a frontend README
+  - a backend README
+- You can also add screenshots, architecture diagrams, and a demo GIF once the UI is ready.

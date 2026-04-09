@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.nx/
+.corepack/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+*.log

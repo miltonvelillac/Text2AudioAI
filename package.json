@@ -1,0 +1,25 @@
+{
+  "name": "text2audio-ai",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Nx + pnpm monorepo for the Text2Audio AI project.",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "nx": "node tools/scripts/run-nx.js",
+    "build": "node tools/scripts/run-typescript-projects.js build",
+    "typecheck": "node tools/scripts/run-typescript-projects.js typecheck",
+    "format": "prettier --write .",
+    "graph": "node tools/scripts/run-nx.js graph",
+    "workspace:projects": "node tools/scripts/run-nx.js show projects"
+  },
+  "devDependencies": {
+    "@nx/js": "^22.6.4",
+    "nx": "^22.6.4",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  }
+}

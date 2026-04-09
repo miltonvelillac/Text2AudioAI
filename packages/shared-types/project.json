@@ -1,0 +1,32 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "shared-types",
+  "sourceRoot": "packages/shared-types/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "packages/shared-types/src/index.ts",
+        "outputPath": "packages/shared-types/dist",
+        "tsConfig": "packages/shared-types/tsconfig.json",
+        "assets": [],
+        "generatePackageJson": false
+      }
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "packages/shared-types/src/index.ts",
+        "outputPath": "tmp/typecheck/shared-types",
+        "tsConfig": "packages/shared-types/tsconfig.typecheck.json",
+        "assets": [],
+        "clean": false,
+        "generatePackageJson": false
+      }
+    }
+  },
+  "tags": ["scope:shared", "type:types"]
+}
