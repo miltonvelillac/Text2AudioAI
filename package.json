@@ -11,11 +11,12 @@
   "scripts": {
     "nx": "node tools/scripts/run-nx.js",
     "build": "node tools/scripts/run-typescript-projects.js build && corepack pnpm web:build",
-    "test": "corepack pnpm web:test",
+    "test": "corepack pnpm api:test && corepack pnpm web:test",
     "typecheck": "node tools/scripts/run-typescript-projects.js typecheck && corepack pnpm web:typecheck",
     "api:dev": "node tools/scripts/dev-api.js",
     "api:serve": "corepack pnpm build && corepack pnpm api:start",
     "api:start": "node apps/api/dist/server.js",
+    "api:test": "corepack pnpm --dir apps/api test",
     "web:dev": "corepack pnpm --dir apps/web dev",
     "web:build": "corepack pnpm --dir apps/web build",
     "web:test": "corepack pnpm --dir apps/web test",

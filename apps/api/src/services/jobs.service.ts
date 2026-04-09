@@ -3,15 +3,28 @@ import { randomUUID } from 'node:crypto';
 import type {
   CreateJobRequest,
   JobStatus,
-  SummaryLength,
 } from '@text2audio-ai/shared-types';
 
-interface JobRecord {
+import {
+  summarizationService,
+  type SummarizationService,
+} from './summarization.service.js';
+
+type TimerLike = ReturnType<typeof setTimeout>;
+type ScheduleTimeout = (
+  callback: () => void,
+  delay: number,
+) => TimerLike;
+
+export interface JobRecord {
   id: string;
   request: CreateJobRequest;
   status: JobStatus;
   originalText: string;
   finalText: string;
+  summaryProvider?: string;
+  summaryModel?: string;
+  errorMessage?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -20,29 +33,21 @@ function normalizeText(text: string): string {
   return text.replace(/\r\n/g, '\n').trim();
 }
 
-function selectSummaryWordLimit(length: SummaryLength): number {
-  switch (length) {
-    case 'short':
-      return 30;
-    case 'medium':
-      return 60;
-    case 'long':
-      return 120;
+function formatProcessingError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
   }
+
+  return 'Unexpected summarization error.';
 }
 
-function createFallbackSummary(
-  text: string,
-  length: SummaryLength = 'medium',
-): string {
-  const words = normalizeText(text).split(/\s+/).filter(Boolean);
-  const maxWords = selectSummaryWordLimit(length);
-
-  return words.slice(0, maxWords).join(' ');
-}
-
-class JobsService {
+export class JobsService {
   private readonly jobs = new Map<string, JobRecord>();
+
+  constructor(
+    private readonly summaryService: Pick<SummarizationService, 'summarize'> = summarizationService,
+    private readonly scheduleTimeout: ScheduleTimeout = setTimeout,
+  ) {}
 
   createJob(input: CreateJobRequest): JobRecord {
     const normalizedText = normalizeText(input.text);
@@ -56,10 +61,8 @@ class JobsService {
       },
       status: 'queued',
       originalText: normalizedText,
-      finalText:
-        input.mode === 'summary'
-          ? createFallbackSummary(normalizedText, input.summaryLength)
-          : normalizedText,
+      finalText: input.mode === 'summary' ? '' : normalizedText,
+      summaryProvider: input.mode === 'summary' ? undefined : 'passthrough',
       createdAt: timestamp,
       updatedAt: timestamp,
     };
@@ -75,13 +78,9 @@ class JobsService {
   }
 
   private scheduleProgression(jobId: string): void {
-    setTimeout(() => {
-      this.updateStatus(jobId, 'processing');
+    this.scheduleTimeout(() => {
+      void this.processJob(jobId);
     }, 250);
-
-    setTimeout(() => {
-      this.updateStatus(jobId, 'completed');
-    }, 900);
   }
 
   private updateStatus(jobId: string, status: JobStatus): void {
@@ -94,7 +93,40 @@ class JobsService {
     job.status = status;
     job.updatedAt = new Date().toISOString();
   }
+
+  private async processJob(jobId: string): Promise<void> {
+    const job = this.jobs.get(jobId);
+
+    if (!job) {
+      return;
+    }
+
+    this.updateStatus(jobId, 'processing');
+
+    try {
+      if (job.request.mode === 'summary') {
+        const result = await this.summaryService.summarize({
+          text: job.originalText,
+          language: job.request.language,
+          summaryLength: job.request.summaryLength,
+        });
+
+        job.finalText = result.summary;
+        job.summaryProvider = result.provider;
+        job.summaryModel = result.model;
+      } else {
+        job.finalText = job.originalText;
+        job.summaryProvider = 'passthrough';
+        job.summaryModel = undefined;
+      }
+
+      job.errorMessage = undefined;
+      this.updateStatus(jobId, 'completed');
+    } catch (error) {
+      job.errorMessage = formatProcessingError(error);
+      this.updateStatus(jobId, 'failed');
+    }
+  }
 }
 
 export const jobsService = new JobsService();
-

@@ -21,39 +21,6 @@ import { summaryLengthChoices } from './job-studio.config';
     <div class="studio-shell">
       <div class="orb orb-primary"></div>
       <div class="orb orb-secondary"></div>
-
-      <section class="hero-panel">
-        <div class="hero-copy">
-          <p class="eyebrow">Text-to-audio</p>
-        </div>
-
-        <div class="hero-metrics">
-          <article class="metric-card">
-            <span class="metric-label">Mode</span>
-            <strong>{{ facade.requestModeLabel() }}</strong>
-            <small>
-              {{
-                facade.currentMode() === 'summary'
-                  ? 'Summarize, then narrate.'
-                  : 'Narrate the original text.'
-              }}
-            </small>
-          </article>
-
-          <article class="metric-card">
-            <span class="metric-label">Words</span>
-            <strong>{{ facade.wordCount() }}</strong>
-            <small>Approx. {{ facade.estimatedReadMinutes() }} minute read.</small>
-          </article>
-
-          <article class="metric-card">
-            <span class="metric-label">Voice</span>
-            <strong>{{ facade.activeVoiceLabel() }}</strong>
-            <small>{{ facade.selectedLanguage() === 'es' ? 'Spanish' : 'English' }} lane.</small>
-          </article>
-        </div>
-      </section>
-
       <section class="workspace">
         <article class="panel composer-panel">
           <div class="panel-head">
