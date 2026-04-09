@@ -6,6 +6,11 @@ export type JobStatus = 'queued' | 'processing' | 'completed' | 'failed';
 
 export type OutputFormat = 'mp3' | 'wav';
 
+export interface JobStatusResponse {
+  id: string;
+  status: JobStatus;
+}
+
 export interface CreateJobRequest {
   text: string;
   mode: JobMode;
@@ -15,10 +20,7 @@ export interface CreateJobRequest {
   outputFormat: OutputFormat;
 }
 
-export interface CreateJobResponse {
-  id: string;
-  status: JobStatus;
-}
+export type CreateJobResponse = JobStatusResponse;
 
 export interface JobResultProviderInfo {
   summary?: string;
@@ -35,4 +37,3 @@ export interface JobResult {
   durationSeconds: number;
   provider: JobResultProviderInfo;
 }
-

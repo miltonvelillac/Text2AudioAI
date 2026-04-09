@@ -13,18 +13,37 @@ const workspaceRoot = process.cwd();
 const projects = [
   {
     name: 'shared-types',
+    typecheckConfig: path.join(workspaceRoot, 'packages/shared-types', 'tsconfig.json'),
     config: path.join(
       workspaceRoot,
       'packages/shared-types',
-      mode === 'build' ? 'tsconfig.json' : 'tsconfig.typecheck.json',
+      'tsconfig.json',
     ),
   },
   {
     name: 'shared-utils',
+    typecheckConfig: path.join(
+      workspaceRoot,
+      'packages/shared-utils',
+      'tsconfig.typecheck.json',
+    ),
     config: path.join(
       workspaceRoot,
       'packages/shared-utils',
-      mode === 'build' ? 'tsconfig.json' : 'tsconfig.typecheck.json',
+      'tsconfig.json',
+    ),
+  },
+  {
+    name: 'api',
+    typecheckConfig: path.join(
+      workspaceRoot,
+      'apps/api',
+      'tsconfig.typecheck.json',
+    ),
+    config: path.join(
+      workspaceRoot,
+      'apps/api',
+      'tsconfig.json',
     ),
   },
 ];
@@ -58,7 +77,8 @@ function loadParsedConfig(configPath) {
 function compileProject(project) {
   console.log(`[${project.name}] ${mode}`);
 
-  const parsed = loadParsedConfig(project.config);
+  const configPath = mode === 'build' ? project.config : project.typecheckConfig;
+  const parsed = loadParsedConfig(configPath);
 
   if (!parsed) {
     return false;

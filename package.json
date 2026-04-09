@@ -12,11 +12,13 @@
     "nx": "node tools/scripts/run-nx.js",
     "build": "node tools/scripts/run-typescript-projects.js build",
     "typecheck": "node tools/scripts/run-typescript-projects.js typecheck",
+    "api:start": "node apps/api/dist/server.js",
     "format": "prettier --write .",
     "graph": "node tools/scripts/run-nx.js graph",
     "workspace:projects": "node tools/scripts/run-nx.js show projects"
   },
   "devDependencies": {
+    "@types/node": "^24.7.2",
     "@nx/js": "^22.6.4",
     "nx": "^22.6.4",
     "prettier": "^3.4.2",

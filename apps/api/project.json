@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "api",
+  "sourceRoot": "apps/api/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "apps/api/src/server.ts",
+        "outputPath": "apps/api/dist",
+        "tsConfig": "apps/api/tsconfig.json",
+        "assets": [],
+        "generatePackageJson": false
+      }
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "main": "apps/api/src/server.ts",
+        "outputPath": "tmp/typecheck/api",
+        "tsConfig": "apps/api/tsconfig.typecheck.json",
+        "assets": [],
+        "clean": false,
+        "generatePackageJson": false
+      }
+    }
+  },
+  "tags": ["scope:api", "type:app"]
+}
+
