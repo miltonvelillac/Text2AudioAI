@@ -1,0 +1,64 @@
+:root {
+  color-scheme: dark;
+  --color-bg: #06111c;
+  --color-surface: rgba(11, 22, 35, 0.78);
+  --color-ink: #edf5fb;
+  --color-muted: #9aaebf;
+  --color-border: rgba(126, 151, 176, 0.18);
+  --color-accent: #46d6be;
+  --color-accent-alt: #ff9a56;
+  --shadow-panel: 0 26px 80px rgba(0, 0, 0, 0.38);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(70, 214, 190, 0.16), transparent 24rem),
+    radial-gradient(circle at top right, rgba(255, 154, 86, 0.12), transparent 22rem),
+    linear-gradient(180deg, #08131f 0%, var(--color-bg) 52%, #03080d 100%);
+  color: var(--color-ink);
+  font-family: 'Aptos', 'Segoe UI Variable', 'Trebuchet MS', sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+  pointer-events: none;
+}
+
+app-root {
+  display: block;
+  padding: 2rem;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+code {
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+@media (max-width: 640px) {
+  app-root {
+    padding: 1rem;
+  }
+}

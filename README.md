@@ -19,6 +19,8 @@
 
 ---
 
+* Note: The scripts are run with corepack ex: corepack pnpm api:serve
+
 ## Table of Contents
 
 - [Overview](#overview)

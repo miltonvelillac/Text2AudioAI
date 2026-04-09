@@ -3,6 +3,7 @@ dist/
 coverage/
 .nx/
 .corepack/
+.angular/
 .pnpm-store/
 .env
 .env.*
