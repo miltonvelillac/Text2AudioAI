@@ -22,6 +22,24 @@ export interface CreateJobRequest {
 
 export type CreateJobResponse = JobStatusResponse;
 
+export interface JobTextResultProviderInfo {
+  summary?: string;
+}
+
+export interface JobTextResultModelInfo {
+  summary?: string;
+}
+
+export interface JobTextResult {
+  id: string;
+  status: Extract<JobStatus, 'completed'>;
+  mode: JobMode;
+  originalText: string;
+  finalText: string;
+  provider: JobTextResultProviderInfo;
+  model?: JobTextResultModelInfo;
+}
+
 export interface JobResultProviderInfo {
   summary?: string;
   tts: string;

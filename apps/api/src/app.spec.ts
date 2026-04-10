@@ -94,6 +94,53 @@ describe('app', () => {
     });
   });
 
+  it('returns the completed text result through GET /api/jobs/:id/result', async () => {
+    vi.spyOn(jobsService, 'getJob').mockReturnValue(
+      createJobRecord({
+        id: 'job_10',
+        status: 'completed',
+        finalText: 'Resumen final.',
+        summaryProvider: 'google-gemini',
+        summaryModel: 'gemini-2.5-flash-lite',
+      }),
+    );
+
+    const response = await request(app).get('/api/jobs/job_10/result');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      id: 'job_10',
+      status: 'completed',
+      mode: 'summary',
+      originalText: 'Texto listo para resumir.',
+      finalText: 'Resumen final.',
+      provider: {
+        summary: 'google-gemini',
+      },
+      model: {
+        summary: 'gemini-2.5-flash-lite',
+      },
+    });
+  });
+
+  it('returns 409 when the text result is requested before completion', async () => {
+    vi.spyOn(jobsService, 'getJob').mockReturnValue(
+      createJobRecord({
+        id: 'job_12',
+        status: 'processing',
+      }),
+    );
+
+    const response = await request(app).get('/api/jobs/job_12/result');
+
+    expect(response.status).toBe(409);
+    expect(response.body).toEqual({
+      id: 'job_12',
+      status: 'processing',
+      message: 'Job "job_12" is not completed yet.',
+    });
+  });
+
   it('returns 404 when a route is unknown', async () => {
     const response = await request(app).get('/api/unknown');
 
